@@ -1,4 +1,5 @@
 # Git命令集合
+
 新建一个README文档，若上一步勾选了创建README.md，提交时导致冲突  
 >touch README.md
 
@@ -24,3 +25,7 @@
 git rm -r --cached .idea  #--cached不会把本地的.idea删除
 git commit -m 'delete .idea dir'
 git push -u origin master
+
+>屏蔽以***结尾的文件： *.iml
+>屏蔽文件夹： /gradle
+>屏蔽文件： *gradlew

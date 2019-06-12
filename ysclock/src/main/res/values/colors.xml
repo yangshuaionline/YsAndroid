@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="second_color">#000000</color>
+    <color name="min_color">#AE1D22</color>
+    <color name="hour_color">#7C444E</color>
+
+    <color name="back_ground">#666666</color>
+    <color name="progress">#27F6FB</color>
+</resources>
