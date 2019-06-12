@@ -17,7 +17,6 @@ public class MainActivity extends AppCompatActivity {
         Button bt = findViewById(R.id.bt);
         bt.setOnClickListener(view1->{
             view.setTime(5,30,24);
-            Toast.makeText(this,String.valueOf(0%3),Toast.LENGTH_SHORT).show();
         });
     }
 }

@@ -35,6 +35,13 @@ import static java.lang.Math.sin;
  * 邮箱：57125827@qq.com
  **/
 public class YsClockView extends View {
+    private Paint mPaintBackgound;//通用的刷子
+    private Paint mPaintNumber;//数字专用刷子
+    private int mProgressSecond = 0;//秒进度
+    private int mProgressMin = 0;//分进度
+    private int mProgressHour = 0;//时进度
+    private int mCircleWidth = 50;//圆环的宽度
+
     public YsClockView(Context context) {
         this(context,null);
     }
@@ -53,40 +60,36 @@ public class YsClockView extends View {
         super(context, attrs, defStyleAttr, defStyleRes);
         setInit();
     }
-    Paint mPaint;
     private void setInit(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            mPaint.setStyle(Paint.Style.STROKE);
-            mPaint.setStrokeWidth(10);
-            mPaint.setStrokeCap(Paint.Cap.ROUND);//作用于圆环结尾
-            mPaint.setColor(getContext().getColor(android.R.color.black));
-        }
-        p = new Paint(Paint.ANTI_ALIAS_FLAG);
-        p.setStyle(Paint.Style.FILL);
-        p.setColor(getContext().getResources().getColor(android.R.color.black));
-        p.setTextSize(100);
-        p.setTextAlign(Paint.Align.CENTER);
+        mPaintBackgound = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaintBackgound.setStyle(Paint.Style.STROKE); // 设置空心
+        mPaintBackgound.setStrokeCap(Paint.Cap.ROUND);//作用于圆环结尾（圆润）
+        mPaintBackgound.setColor(getContext().getResources().getColor(android.R.color.black));
+        mPaintBackgound.setStrokeWidth(mCircleWidth); // 设置圆环的宽度
+        mPaintBackgound.setAntiAlias(true); // 消除锯齿
+
+
+        mPaintNumber = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaintNumber.setStyle(Paint.Style.FILL);// 设置实心
+        mPaintNumber.setColor(getContext().getResources().getColor(android.R.color.black));
+        mPaintNumber.setTextSize(100);//设置字体
+        mPaintNumber.setTextAlign(Paint.Align.CENTER);//设置居中
         // 绘图线程
         new Thread() {
             public void run() {
                 while (true) {
-                    mProgressSecond +=6;//每次一秒
+                    mProgressSecond +=6;//秒针每秒跳动6度
                     if (mProgressSecond == 360) {
                         mProgressSecond = 0;
-                        mProgressMin +=6;
+                        mProgressMin +=6;//秒针每转一圈分针跳动6度
                         if(mProgressMin == 360){
                             mProgressMin = 0;
-                            mProgressHour += 30;
+                            mProgressHour += 30;//分针每转一圈，时针跳30度
                         }
-                        if (!isNext)
-                            isNext = true;
-                        else
-                            isNext = false;
                     }
-                    postInvalidate();
+                    postInvalidate();//刷新view
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(1000);//每秒循环一次
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -94,13 +97,8 @@ public class YsClockView extends View {
             }
         }.start();
     }
-    int mProgressSecond = 0;
-    int mProgressMin = 0;
-    int mProgressHour = 0;
-    boolean isNext;
-    int mCircleWidth = 50;
-    Paint p;
-    //定时间
+
+    //根据传过来的时分秒，来确定时分秒针的角度
     public void setTime(int hour,int min,int second){
         if(hour>12) hour -=12;
         this.mProgressHour = 30*hour;
@@ -110,95 +108,85 @@ public class YsClockView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         int centre = getWidth() / 2; // 获取圆心的x坐标
-        int radius = centre - mCircleWidth / 2;// 半径
-        mPaint.setStrokeWidth(mCircleWidth); // 设置圆环的宽度
-        mPaint.setAntiAlias(true); // 消除锯齿
-        mPaint.setStyle(Paint.Style.STROKE); // 设置空心
+        int radius = centre - mCircleWidth / 2;// 半径减去圆环宽度的一半
+        //圆心的xy坐标
+        float xCenter = centre;
+        float yCenter = centre;
         /**
          * 画表框
          * */
-        RectF oval = new RectF(centre - radius, centre - radius, centre + radius, centre + radius); // 用于定义的圆弧的形状和大小的界限
-        if (!isNext) {// 第一颜色的圈完整，第二颜色跑
-            mPaint.setColor(getResources().getColor(R.color.back_ground)); // 设置圆环的颜色
-            canvas.drawCircle(centre, centre, radius, mPaint); // 画出圆环
-            mPaint.setColor(getResources().getColor(android.R.color.black)); // 设置圆环的颜色
-            canvas.drawArc(oval, -90, mProgressSecond, false, mPaint); // 根据进度画圆弧
-        } else {
-            mPaint.setColor(getResources().getColor(android.R.color.black)); // 设置圆环的颜色
-            canvas.drawCircle(centre, centre, radius, mPaint); // 画出圆环
-            mPaint.setColor(getResources().getColor(R.color.back_ground)); // 设置圆环的颜色
-            canvas.drawArc(oval, -90, mProgressSecond, false, mPaint); // 根据进度画圆弧
-        }
-        float x0 = centre;
-        float y0 = centre;
+        mPaintBackgound.setColor(getResources().getColor(R.color.back_ground)); // 设置圆环的颜色
+        canvas.drawCircle(centre, centre, radius, mPaintBackgound); // 画出圆环（空心圆）
         /**
          * 画时针
          * */
-        mPaint.setColor(getResources().getColor(R.color.hour_color)); // 设置时针的颜色
-        int progressHour = getProgress(mProgressHour);
-        float x1Hour   = (float) (x0   +   radius/4  *   cos(progressHour   *   3.14   /180   ));
-        float y1Hour   = (float) (y0   +   radius/4   *   sin(progressHour   *   3.14   /180   ));
-        canvas.drawLine(x0,y0, x1Hour,y1Hour, mPaint);
+        mPaintBackgound.setColor(getResources().getColor(R.color.hour_color)); // 设置时针的颜色
+        int progressHour = getProgress(mProgressHour);//计算出来时针的真实角度
+        int lengthHour = radius/4;//时针长度
+        //时针的终点坐标
+        float xHour   = (float) (xCenter + lengthHour * cos(progressHour * 3.14 /180));
+        float yHour   = (float) (yCenter + lengthHour * sin(progressHour * 3.14 /180));
+        canvas.drawLine(xCenter,yCenter, xHour,yHour, mPaintBackgound);
         /**
          * 画分针
          * */
-        mPaint.setColor(getResources().getColor(R.color.min_color)); // 设置分针的颜色
-        int progressMin = getProgress(mProgressMin);
-        float x1Min   = (float) (x0   +   radius/3   *   cos(progressMin   *   3.14   /180   ));
-        float y1Min   = (float) (y0   +   radius/3   *   sin(progressMin   *   3.14   /180   ));
-        canvas.drawLine(x0,y0, x1Min,y1Min, mPaint);
+        mPaintBackgound.setColor(getResources().getColor(R.color.min_color)); // 设置分针的颜色
+        int progressMin = getProgress(mProgressMin);//计算出来分针的真实角度
+        int lengthMin = radius/3;//分针长度
+        //分针的终点坐标
+        float xMin   = (float) (xCenter + lengthMin * cos(progressMin * 3.14 /180));
+        float yMin   = (float) (yCenter + lengthMin * sin(progressMin * 3.14 /180));
+        canvas.drawLine(xCenter,yCenter, xMin,yMin, mPaintBackgound);
         /**
          * 画秒针
          * */
-        mPaint.setColor(getResources().getColor(R.color.second_color)); // 设置秒针的颜色
-        int progressSecond = getProgress(mProgressSecond);
-        float x1   = (float) (x0   +   radius/2   *   cos(progressSecond   *   3.14   /180   ));
-        float y1   = (float) (y0   +   radius/2   *   sin(progressSecond   *   3.14   /180   ));
-        canvas.drawLine(x0,y0, x1,y1, mPaint);
+        mPaintBackgound.setColor(getResources().getColor(R.color.second_color)); // 设置秒针的颜色
+        int progressSecond = getProgress(mProgressSecond);//计算出来秒针的真实角度
+        int lengthSecond = radius/2;//秒针长度
+        //秒针的终点坐标
+        float xSecond   = (float) (xCenter + lengthSecond * cos(progressSecond * 3.14 /180));
+        float ySecond   = (float) (yCenter + lengthSecond * sin(progressSecond * 3.14 /180));
+        canvas.drawLine(xCenter,yCenter, xSecond,ySecond, mPaintBackgound);
         /**
          * 画刻度
          * */
-        mPaint.setColor(getResources().getColor(R.color.back_ground)); // 设置秒针的颜色
+        mPaintBackgound.setColor(getResources().getColor(R.color.back_ground)); // 设置刻度的颜色
+        //十二个刻度
         for(int i = 0;i<12;i++){
-            //整点刻度
-            int start;
-            int end = 10;
-            if(i%3 == 0){
-                start = 6;
+            int start;//刻度开始的位置，0、3、6、9比较长，需要单独计算
+            int end = radius;//刻度结束的位置为圆弧的终点
+            if(i%3 == 0){//0、3、6、9
+                start = radius/6*5;
             }else{
-                start = 9;
+                start = radius/10*9;
             }
-            int a = i*30;
-            float xx   = (float) (x0   +   (radius-radius/start)   *   cos(a   *   3.14   /180   ));
-            float yy   = (float) (y0   +   (radius-radius/start)   *   sin(a   *   3.14   /180   ));
-            float xxx   = (float) (x0   +   (radius-radius/end)   *   cos(a   *   3.14   /180   ));
-            float yyy   = (float) (y0   +   (radius-radius/end)   *   sin(a   *   3.14   /180   ));
-            canvas.drawLine(xx,yy, xxx,yyy, mPaint);
-            //绘制数字
-            float xxxx   = (float) (x0   +   (radius-radius/3)   *   cos(a   *   3.14   /180   ));
-            float yyyy   = (float) (y0   +   (radius-radius/3)   *   sin(a   *   3.14   /180   ));
-            int num;
+            int a = i*30;//每个刻度的实际角度
+            //开始结束点的XY坐标点
+            float xStart   = (float) (xCenter + start * cos(a * 3.14 /180 ));
+            float yStart   = (float) (yCenter + start * sin(a * 3.14 /180 ));
+            float xEnd   = (float) (xCenter + end * cos(a * 3.14 /180 ));
+            float yEnd   = (float) (yCenter + end * sin(a * 3.14 /180 ));
+            canvas.drawLine(xStart,yStart, xEnd,yEnd, mPaintBackgound);
+            /**
+             * 绘制数字
+             * */
+            int radiusNum = radius/3*2;//数字所占的圆弧的半径
+            float xNum = (float) (xCenter + radiusNum * cos(a * 3.14 /180 ));
+            //todo 实际位置偏上30个像素单位左右
+            float yNum = 30+(float) (yCenter + radiusNum * sin(a * 3.14 /180 ));
+            int num;//计算显示的数字
             if(i<10){
                 num = i+3;
             }else{
                 num = i-9;
             }
-            canvas.drawText(String.valueOf(num),xxxx,yyyy+30,p);
+            canvas.drawText(String.valueOf(num),xNum,yNum, mPaintNumber);
         }
-
     }
     /**
-     * 计算指针的角度
+     * 计算指针的真实角度（默认0度不在正上方）
      * */
     private int getProgress(int progress){
         return progress<0?progress+270:progress-90;
-    }
-
-    /**
-     * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
-     */
-    public static int dip2px(Context context, float dpValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
     }
 }
