@@ -3,8 +3,10 @@ package yang.shuai.ysclock;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -38,7 +40,7 @@ public class YsClockView extends View {
     private int mProgressSecond = 0;//秒进度
     private int mProgressMin = 0;//分进度
     private int mProgressHour = 0;//时进度
-    private int mCircleWidth = 50;//圆环的宽度
+    private int mCircleWidth = 5;//圆环的宽度
 
     public YsClockView(Context context) {
         this(context,null);
@@ -65,21 +67,24 @@ public class YsClockView extends View {
         mPaint.setColor(getContext().getResources().getColor(android.R.color.black));
         mPaint.setStrokeWidth(mCircleWidth); // 设置圆环的宽度
         mPaint.setAntiAlias(true); // 消除锯齿
-        mPaint.setTextSize(100);//设置字体
+        mPaint.setTextSize(dip2px(getContext(),30));//设置字体
         mPaint.setTextAlign(Paint.Align.CENTER);//设置居中
         // 绘图线程
         new Thread() {
             public void run() {
                 while (true) {
+                    //设置指针联动
                     mProgressSecond +=6;//秒针每秒跳动6度
-                    if (mProgressSecond == 360) {
-                        mProgressSecond = 0;
-                        mProgressMin +=6;//秒针每转一圈分针跳动6度
-                        if(mProgressMin == 360){
-                            mProgressMin = 0;
-                            mProgressHour += 30;//分针每转一圈，时针跳30度
+                    if(mProgressSecond%60 == 0){
+                        mProgressMin +=1;//秒针每转60度分针跳动1度
+                        if(mProgressMin!=0&&mProgressMin%12 == 0){
+                            mProgressHour += 1;//分针每转12度时针跳动1度
                         }
                     }
+                    //设置指针重置
+                    if(mProgressSecond == 360) mProgressSecond = 0;
+                    if(mProgressMin == 360) mProgressMin = 0;
+                    if(mProgressHour == 360)  mProgressHour = 0;
                     postInvalidate();//刷新view
                     try {
                         Thread.sleep(1000);//每秒循环一次
@@ -152,7 +157,7 @@ public class YsClockView extends View {
             if(i%3 == 0){//0、3、6、9
                 start = radius/6*5;
             }else{
-                start = radius/10*9;
+                start = radius/20*19;
             }
             int a = i*30;//每个刻度的实际角度
             //开始结束点的XY坐标点
@@ -166,16 +171,21 @@ public class YsClockView extends View {
              * */
             int radiusNum = radius/3*2;//数字所占的圆弧的半径
             float xNum = (float) (xCenter + radiusNum * cos(a * 3.14 /180 ));
-            //todo 实际位置偏上30个像素单位左右
-            float yNum = 30+(float) (yCenter + radiusNum * sin(a * 3.14 /180 ));
+            float yNum = (float) (yCenter + radiusNum * sin(a * 3.14 /180 ));
+            //获取text绘制区域顶部以及底部的拓展值，该拓展值是相对给定坐标的坐标。
+            float textTop = mPaint.getFontMetrics().top;
+            float textBottom = mPaint.getFontMetrics().bottom;
             int num;//计算显示的数字
             if(i<10){
                 num = i+3;
             }else{
                 num = i-9;
             }
-            mPaint.setStyle(Paint.Style.FILL);// 设置实心
-            canvas.drawText(String.valueOf(num),xNum,yNum, mPaint);
+            if(i%3 == 0) {//0、3、6、9
+                mPaint.setColor(getResources().getColor(android.R.color.black));
+                canvas.drawText(String.valueOf(num),xNum,yNum-(textTop+textBottom)/2, mPaint);
+            }
+
         }
     }
     /**
@@ -183,5 +193,21 @@ public class YsClockView extends View {
      * */
     private int getProgress(int progress){
         return progress<0?progress+270:progress-90;
+    }
+
+    /**
+     * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
+     */
+    public static int dip2px(Context context, float dpValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
+
+    /**
+     * 根据手机的分辨率从 px(像素) 的单位 转成为 dp
+     */
+    public static int px2dip(Context context, float pxValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (pxValue / scale + 0.5f);
     }
 }

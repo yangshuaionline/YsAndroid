@@ -25,8 +25,11 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //noinspection GradleDependency
     implementation "androidx.appcompat:appcompat:$support_library_version"
+    //noinspection GradleDependency
     implementation "androidx.constraintlayout:constraintlayout:$constraint_version"
+    implementation "com.google.android.material:material:$support_library_version"
     testImplementation "junit:junit:$junit_version"
     implementation project(':ysclock')
 }
