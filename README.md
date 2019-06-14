@@ -4,4 +4,4 @@
 >待定。。。
 - 效果图：
 
-![时钟](./pictures/ysclock.png)
+![时钟](./pictures/ysclockLinearShader.png)
