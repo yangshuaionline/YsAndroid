@@ -1,9 +1,20 @@
 package yang.shuai.ysclock;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ComposeShader;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.RadialGradient;
 import android.graphics.RectF;
+import android.graphics.Shader;
+import android.graphics.SweepGradient;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -41,7 +52,7 @@ public class YsClockView extends View {
     private int mProgressMin = 0;//分进度
     private int mProgressHour = 0;//时进度
     private int mCircleWidth = 5;//圆环的宽度
-
+    private boolean isChange = false;
     public YsClockView(Context context) {
         this(context,null);
     }
@@ -60,6 +71,7 @@ public class YsClockView extends View {
         super(context, attrs, defStyleAttr, defStyleRes);
         setInit();
     }
+
     private void setInit(){
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStyle(Paint.Style.STROKE); // 设置空心
@@ -85,6 +97,11 @@ public class YsClockView extends View {
                     if(mProgressSecond == 360) mProgressSecond = 0;
                     if(mProgressMin == 360) mProgressMin = 0;
                     if(mProgressHour == 360)  mProgressHour = 0;
+                    if(isChange){
+                        isChange = false;
+                    }else{
+                        isChange = true;
+                    }
                     postInvalidate();//刷新view
                     try {
                         Thread.sleep(1000);//每秒循环一次
@@ -112,8 +129,58 @@ public class YsClockView extends View {
         float yCenter = centre;
         mPaint.setStyle(Paint.Style.STROKE);// 共用一个刷子，需要每次都先设置实心
         /**
+         * 画表盘背景色
+         * */
+        //渐变的颜色顺序
+        int[] colors;
+        float[] stops; //每个颜色结束的位置，中间为渐变
+        if(isChange){
+            colors= new int[]{
+                    getResources().getColor(R.color.back_ground),
+                    getResources().getColor(R.color.progress),
+                    getResources().getColor(R.color.back_ground),
+                    getResources().getColor(R.color.progress),
+                    getResources().getColor(R.color.back_ground),
+                    getResources().getColor(R.color.progress),
+                    getResources().getColor(R.color.back_ground),
+                    getResources().getColor(R.color.progress),
+                    getResources().getColor(R.color.back_ground),
+                    getResources().getColor(R.color.progress)
+            };
+            stops = new float[]{0f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f};
+        }else{
+            colors= new int[]{
+                    getResources().getColor(R.color.back_ground),
+                    getResources().getColor(R.color.progress),
+                    getResources().getColor(R.color.back_ground),
+                    getResources().getColor(R.color.progress),
+                    getResources().getColor(R.color.back_ground),
+                    getResources().getColor(R.color.progress),
+                    getResources().getColor(R.color.back_ground),
+                    getResources().getColor(R.color.progress),
+                    getResources().getColor(R.color.back_ground),
+                    getResources().getColor(R.color.progress)
+            };
+            stops = new float[]{0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f,1.0f};
+        }
+        LinearGradient gradient =
+                new LinearGradient(
+                        0,//着色器开始的x坐标
+                        0,//着色器开始的y坐标
+                        getWidth(),//着色器结束的x坐标
+                        getHeight(),//着色器结束的y坐标
+                        colors,//着色器的颜色集
+                        stops,//着色器的颜色定位集
+                        Shader.TileMode.CLAMP//明暗平衡模式
+                );
+        mPaint.setShader(gradient);
+        mPaint.setStyle(Paint.Style.FILL);
+        canvas.drawCircle(centre, centre, radius, mPaint); // 画出圆环(实心)
+        /**
          * 画表框
          * */
+        mPaint.setStyle(Paint.Style.STROKE);
+        mPaint.setShader(null);
         mPaint.setColor(getResources().getColor(R.color.back_ground)); // 设置圆环的颜色
         canvas.drawCircle(centre, centre, radius, mPaint); // 画出圆环（空心圆）
         /**

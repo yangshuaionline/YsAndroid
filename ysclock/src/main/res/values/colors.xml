@@ -6,4 +6,6 @@
 
     <color name="back_ground">#666666</color>
     <color name="progress">#27F6FB</color>
+    <color name="red">#D21724</color>
+    <color name="pink">#F426FF</color>
 </resources>
