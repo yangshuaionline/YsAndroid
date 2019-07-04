@@ -1,18 +1,18 @@
 package yang.shuai.ysandroid;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import yang.shuai.ysclock.YsClockView;
 
+import android.annotation.SuppressLint;
+import android.app.Service;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.Toast;
-
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
         manager.setOrientation(RecyclerView.VERTICAL);
         List<String> list = new ArrayList<>();
         list.add("时钟");
+        list.add("爱心");
+        list.add("Glide源码分析");
         rv.setLayoutManager(manager);
         rv.setAdapter(new MainAdapter(this,list));
     }

@@ -97,11 +97,7 @@ public class YsClockView extends View {
                     if(mProgressSecond == 360) mProgressSecond = 0;
                     if(mProgressMin == 360) mProgressMin = 0;
                     if(mProgressHour == 360)  mProgressHour = 0;
-                    if(isChange){
-                        isChange = false;
-                    }else{
-                        isChange = true;
-                    }
+                    isChange = !isChange;
                     postInvalidate();//刷新view
                     try {
                         Thread.sleep(1000);//每秒循环一次

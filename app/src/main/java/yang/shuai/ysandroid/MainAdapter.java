@@ -13,6 +13,7 @@ import java.util.zip.Inflater;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import yang.shuai.ysclock.YsClockMainActivity;
+import yang.shuai.yslove.YsLoveMainActivity;
 
 /**
  * 　┏┓　　　┏┓
@@ -58,8 +59,14 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainHolder> {
         textView.setText(list.get(position));
         textView.setOnClickListener(view ->{
             switch (position){
-                case 0:
+                case 0://时钟
                     context.startActivity(new Intent(context, YsClockMainActivity.class));
+                    break;
+                case 1://爱心
+                    context.startActivity(new Intent(context, YsLoveMainActivity.class));
+                    break;
+                case 2:
+                    context.startActivity(new Intent(context,GlideTestActivity.class));
                     break;
             }
         });
