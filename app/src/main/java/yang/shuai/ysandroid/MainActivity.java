@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         List<String> list = new ArrayList<>();
         list.add("时钟");
         list.add("爱心");
+        list.add("选择菜单");
         list.add("Glide源码分析");
         rv.setLayoutManager(manager);
         rv.setAdapter(new MainAdapter(this,list));

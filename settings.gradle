@@ -1,1 +1,1 @@
-include ':app', ':ysclock', ':yslove'
+include ':app', ':ysclock', ':yslove', ':ysselecttab'

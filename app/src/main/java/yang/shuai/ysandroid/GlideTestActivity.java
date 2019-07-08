@@ -16,7 +16,7 @@ public class GlideTestActivity extends AppCompatActivity {
         ImageView iv = findViewById(R.id.iv);
         Glide
                 .with(this)
-                .load(R.mipmap.aaaa)
+                .load("")
                 .centerCrop()
                 .placeholder(R.drawable.ic_launcher)
                 .into(iv);

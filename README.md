@@ -6,4 +6,6 @@
 ### 时钟效果图
 ![时钟](./pictures/ysclockLinearShader.png)
 ### 爱心效果图
-![时钟](./pictures/love.png)
+![爱心](./pictures/love.png)
+### 选择菜单
+![选择菜单](./pictures/selecttab.png)

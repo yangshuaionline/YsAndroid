@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import yang.shuai.ysclock.YsClockMainActivity;
 import yang.shuai.yslove.YsLoveMainActivity;
+import yang.shuai.ysselecttab.YsSelectTabMainActivity;
 
 /**
  * 　┏┓　　　┏┓
@@ -65,7 +66,10 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainHolder> {
                 case 1://爱心
                     context.startActivity(new Intent(context, YsLoveMainActivity.class));
                     break;
-                case 2:
+                case 2://选择菜单
+                    context.startActivity(new Intent(context, YsSelectTabMainActivity.class));
+                    break;
+                case 3://测试
                     context.startActivity(new Intent(context,GlideTestActivity.class));
                     break;
             }

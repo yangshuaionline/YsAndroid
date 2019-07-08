@@ -36,4 +36,5 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     implementation project(':ysclock')
     implementation project(':yslove')
+    implementation project(':ysselecttab')
 }
