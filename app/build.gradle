@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion rootProject.ext.compile_sdk_version
@@ -23,18 +25,20 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     //noinspection GradleDependency
     implementation "androidx.appcompat:appcompat:$support_library_version"
     //noinspection GradleDependency
     implementation "androidx.constraintlayout:constraintlayout:$constraint_version"
+    implementation "androidx.annotation:annotation:$support_library_version"
     implementation "com.google.android.material:material:$support_library_version"
-    implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
+    implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
     testImplementation "junit:junit:$junit_version"
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
-    implementation project(':ysclock')
-    implementation project(':yslove')
-    implementation project(':ysselecttab')
+    implementation project(':flutter')
+    implementation project(':ys_java')
+    implementation project(':ys_kotlin')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

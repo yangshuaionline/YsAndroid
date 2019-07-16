@@ -1,1 +1,7 @@
-include ':app', ':ysclock', ':yslove', ':ysselecttab'
+include ':app', ':ys_java', ':ys_kotlin'
+///Users/mac/FlutterSDK/flutter/bin/cache/dart-sdk
+setBinding(new Binding([gradle: this]))
+evaluate(new File(
+        settingsDir.parentFile,
+        'ysandroid/ys_flutter/.android/include_flutter.groovy'
+))

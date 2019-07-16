@@ -1,0 +1,9 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="yang.shuai.ys_java" >
+    <application>
+        <activity android:name="yang.shuai.ys_java.JavaMainActivity" />
+        <activity android:name="yang.shuai.ys_java.activity.YsClockMainActivity"/>
+        <activity android:name="yang.shuai.ys_java.activity.YsLoveMainActivity"></activity>
+        <activity android:name="yang.shuai.ys_java.activity.YsSelectTabMainActivity"></activity>
+    </application>
+</manifest>
