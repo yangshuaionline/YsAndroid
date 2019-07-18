@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:toast/toast.dart';
+import 'utils/ImageUrl.dart';
 ///首页->侧滑菜单
 class DrawerPage extends StatefulWidget{
 
@@ -35,10 +35,10 @@ class DrawerState extends State<DrawerPage>{
   @override
   Widget build(BuildContext context) {
     if(_list.isEmpty){
-      _list.add(_getRow("asset/attention.png", "关注",null,false));
-      _list.add(_getRow("asset/friend.png", "好友",null,false));
-      _list.add(_getRow("asset/collection.png", "收藏",null,false));
-      _list.add(_getRow("asset/order.png", "订单",null,false));
+      _list.add(_getRow(attention, "关注",null,false));
+      _list.add(_getRow(friend, "好友",null,false));
+      _list.add(_getRow(collection, "收藏",null,false));
+      _list.add(_getRow(order, "订单",null,false));
       _list.add(_getRow(null, "TapTap周边",Icons.shop,true));
       _list.add(_getRow(null, "兑换中心",Icons.party_mode,true));
       _list.add(_getRow(null, "意见反馈",Icons.opacity,true));
@@ -51,31 +51,44 @@ class DrawerState extends State<DrawerPage>{
     return new Drawer(
       child: new Column(
         children: <Widget>[
-          new Container(///上方头部
-            constraints: BoxConstraints.expand(
-              height: _heightTitle,
-            ),
-            color: Colors.blue,
-            alignment:Alignment.centerLeft,//中间左对齐
-            child: new Container(
-              height: 80,
-              margin: const EdgeInsets.all(10),
-              child: new Column(
-                children: <Widget>[
-                  new Builder(//左上角主要图标
-                    builder: (BuildContext context) {
-                      return IconButton(
-                        icon: Image.asset("asset/persion_white.png"),
-                        onPressed: () { Scaffold.of(context).openDrawer(); },
-                        tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-                      );
-                    },
+          new Stack(///上方头部
+            children: <Widget>[
+              new Container(
+                constraints: BoxConstraints.expand(
+                  height: _heightTitle,
+                ),
+                color: Colors.blue,
+                alignment:Alignment.centerLeft,//中间左对齐
+                child: new Container(
+                  height: 80,
+                  margin: const EdgeInsets.all(10),
+                  child: new Column(
+                    children: <Widget>[
+                      new Builder(//左上角主要图标
+                        builder: (BuildContext context) {
+                          return IconButton(
+                            icon: Image.asset(persionWhite),
+                            onPressed: () { Scaffold.of(context).openDrawer(); },
+                            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+                          );
+                        },
+                      ),
+                      new Text("点击头像登录",style: new TextStyle(color: Colors.white,),),
+                    ],
                   ),
-                  new Text("点击头像登录",style: new TextStyle(color: Colors.white,),),
-                ],
+                ),
               ),
-            ),
+              new Container(
+                padding: EdgeInsets.fromLTRB(0,0,20.0,0),
+                constraints: BoxConstraints.expand(
+                  height: _heightTitle/2,
+                ),
+                alignment: Alignment.centerRight,
+                child: new Image.asset(scanWhite,width: 20,height: 20,),
+              )
+            ],
           ),
+
           new Container(///下方列表
             constraints: BoxConstraints.expand(
               height: _heightAll-_heightTitle,
@@ -90,6 +103,5 @@ class DrawerState extends State<DrawerPage>{
       ),
     );
   }
-
 }
 

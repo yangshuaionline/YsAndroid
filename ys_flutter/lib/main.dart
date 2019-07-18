@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-
 import 'Drawer.dart';
 import 'Find.dart';
 import 'First.dart';
 import 'Forum.dart';
+import 'package:ys_flutter/utils/ImageUrl.dart';
 import 'MyGame.dart';
 import 'Ranking.dart';
 
@@ -66,12 +66,12 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: _isShowText//标题，true为文字，false为图片
             ?Text(widget.title)
-            :Image.asset("asset/logo_new.png",height: 30),
+            :Image.asset(logoTapTap,height: 30),
         centerTitle: true,
         leading:Builder(//左上角主要图标
           builder: (BuildContext context) {
             return IconButton(
-              icon: Image.asset("asset/persion_white.png",width: 30,height: 30,),
+              icon: Image.asset(persionWhite,width: 30,height: 30,),
               onPressed: () { Scaffold.of(context).openDrawer(); },
               tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
             );
@@ -82,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Builder(//左上角主要图标
               builder: (BuildContext context) {
                 return IconButton(
-                  icon: Image.asset("asset/search_white.png",width: 25,height: 25,),
+                  icon: Image.asset(searchWhite,width: 25,height: 25,), onPressed: () {},
                 );
               },
             )]
@@ -90,14 +90,14 @@ class _MyHomePageState extends State<MyHomePage> {
             Builder(//左上角主要图标
               builder: (BuildContext context) {
                 return IconButton(
-                  icon: Image.asset("asset/download_white.png",width: 25,height: 25,),
+                  icon: Image.asset(downloadWhite,width: 25,height: 25,),onPressed: () {}
                 );
               },
             ),
             Builder(//左上角主要图标
               builder: (BuildContext context) {
                 return IconButton(
-                  icon: Image.asset("asset/rocket_white.png"),
+                  icon: Image.asset(rocketWhite,width: 25,height: 25,),onPressed: () {}
                 );
               },
             )
@@ -111,15 +111,15 @@ class _MyHomePageState extends State<MyHomePage> {
               title:Text('首页'),
           ),
           BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage("asset/find_black.png")),
+            icon: ImageIcon(AssetImage(findBlack)),
             title:Text('发现'),
           ),
           BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage("asset/forum_black.png")),
+            icon: ImageIcon(AssetImage(forumBlack)),
             title:Text('论坛'),
           ),
           BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage("asset/ranking_black.png")),
+            icon: ImageIcon(AssetImage(rankingBlack)),
             title:Text('排行'),
           ),
           BottomNavigationBarItem(

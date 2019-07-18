@@ -13,10 +13,16 @@ class FindState extends State<FindPage>{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return new Column(
-      children: <Widget>[
-        Text("Find!!!")
-      ],
+    return new ListView.builder(
+      itemCount: 10,
+      itemBuilder: (BuildContext context,int index){
+        return new Container(
+          height: 50,
+          child: new Center(
+            child: new Text("Find${index+1}"),
+          ),
+        );
+      },
     );
   }
 }
